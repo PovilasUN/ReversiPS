@@ -1,15 +1,24 @@
+package main;
+
 public class Board {
     private final int BOARD_SIZE = 8;
-
     private final int MAX_SCORE = 64;
     private final char[][] board;
+    private static Board instance;
 
-    public Board() {
+    private Board() {
         this.board = new char[BOARD_SIZE][BOARD_SIZE];
         this.board[3][4] = 'O';
         this.board[4][3] = 'O';
         this.board[3][3] = 'X';
         this.board[4][4] = 'X';
+    }
+
+    public static synchronized Board getInstance() {
+        if (instance == null) {
+            instance = new Board();
+        }
+        return instance;
     }
 
     public void renderBoard() {
@@ -32,7 +41,7 @@ public class Board {
         System.out.println("---------------------------");
     }
 
-    public int countXOrO(char symbolChar) {
+    public int countSymbol(char symbolChar) {
         int count = 0;
         for (int i = 0; i < BOARD_SIZE; i++)
             for (int j = 0; j < BOARD_SIZE; j++)
@@ -42,13 +51,13 @@ public class Board {
     }
 
     public String returnWinner() {
-        if (countXOrO('X') > countXOrO('O'))
+        if (countSymbol('X') > countSymbol('O'))
             return "Player X.";
         return "Player O.";
     }
 
     public boolean isBoardFull() {
-        return countXOrO('X') + countXOrO('O') == MAX_SCORE;
+        return countSymbol('X') + countSymbol('O') == MAX_SCORE;
     }
 
     public char[][] getBoard() {
